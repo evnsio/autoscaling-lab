@@ -1,0 +1,47 @@
+---
+apiVersion: "autoscaling.k8s.io/v1beta1"
+kind: VerticalPodAutoscaler
+metadata:
+  name: vserver
+  namespace: default
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: vserver
+  updatePolicy:
+    updateMode: "Auto"
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: vserver
+  labels:
+    app: vserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vserver
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: vserver
+    spec:
+      containers:
+      - image: evns/sqrt-server
+        imagePullPolicy: Always
+        name: vserver
+        resources:
+          requests:
+            cpu: 10m
+            memory: 10Mi
+      restartPolicy: Always
+      
+
+      

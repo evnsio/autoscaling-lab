@@ -24,6 +24,17 @@ spec:
       containers:
       - name: recommender
         image: k8s.gcr.io/vpa-recommender:0.6.3
+        command:
+        - /recommender
+        args:
+        - --stderrthreshold=info
+        - --v=2
+        - --storage=prometheus
+        - --prometheus-address=http://prometheus-server
+        - --pod-recommendation-min-cpu-millicores=10
+        - --pod-recommendation-min-memory-mb=30
+        - --kube-api-qps=200
+        - --kube-api-burst=200
         imagePullPolicy: Always
         resources:
           limits:

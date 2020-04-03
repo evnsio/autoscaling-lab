@@ -89,31 +89,31 @@ podAnnotations: {}
 # Available collectors for kube-state-metrics. By default all available
 # collectors are enabled.
 collectors:
-  certificatesigningrequests: true
-  configmaps: true
-  cronjobs: true
+  certificatesigningrequests: false
+  configmaps: false
+  cronjobs: false
   daemonsets: true
   deployments: true
-  endpoints: true
+  endpoints: false
   horizontalpodautoscalers: true
-  ingresses: true
-  jobs: true
-  limitranges: true
+  ingresses: false
+  jobs: false
+  limitranges: false
   mutatingwebhookconfigurations: false
-  namespaces: true
+  namespaces: false
   networkpolicies: false
   nodes: true
-  persistentvolumeclaims: true
-  persistentvolumes: true
+  persistentvolumeclaims: false
+  persistentvolumes: false
   poddisruptionbudgets: true
   pods: true
   replicasets: true
-  replicationcontrollers: true
-  resourcequotas: true
-  secrets: true
-  services: true
-  statefulsets: true
-  storageclasses: true
+  replicationcontrollers: false
+  resourcequotas: false
+  secrets: false
+  services: false
+  statefulsets: false
+  storageclasses: false
   validatingwebhookconfigurations: false
   verticalpodautoscalers: true
   volumeattachments: false

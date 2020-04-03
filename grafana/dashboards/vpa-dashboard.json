@@ -2,7 +2,6 @@
   "annotations": {
     "list": [
       {
-        "$$hashKey": "object:14",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -16,9 +15,105 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1585553062256,
+  "id": 2,
+  "iteration": 1585925817685,
   "links": [],
   "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 6,
+      "panels": [],
+      "title": "Vertical Scaling",
+      "type": "row"
+    },
+    {
+      "datasource": null,
+      "gridPos": {
+        "h": 9,
+        "w": 2,
+        "x": 0,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "last"
+          ],
+          "defaults": {
+            "mappings": [
+              {
+                "from": "",
+                "id": 1,
+                "operator": "",
+                "text": "On",
+                "to": "",
+                "type": 1,
+                "value": "1"
+              },
+              {
+                "from": "",
+                "id": 2,
+                "operator": "",
+                "text": "Off",
+                "to": "",
+                "type": 1,
+                "value": "0"
+              },
+              {
+                "from": "",
+                "id": 3,
+                "operator": "",
+                "text": "-",
+                "to": "",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "pluginVersion": "6.7.1",
+      "targets": [
+        {
+          "expr": "kube_verticalpodautoscaler_spec_updatepolicy_updatemode{target_name=\"$vpa\", update_mode=\"Auto\"}==1",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "VPA Status",
+      "type": "stat"
+    },
     {
       "aliasColors": {},
       "bars": false,
@@ -28,13 +123,374 @@
       "fill": 0,
       "fillGradient": 0,
       "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 0
+        "h": 9,
+        "w": 7,
+        "x": 2,
+        "y": 1
       },
       "hiddenSeries": false,
       "id": 2,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Upper",
+          "fillBelowTo": "Lower",
+          "legend": false,
+          "lines": false
+        },
+        {
+          "alias": "Lower",
+          "legend": false,
+          "lines": false
+        },
+        {
+          "alias": "Target",
+          "color": "#C0D8FF",
+          "dashes": true,
+          "fill": 0,
+          "linewidth": 3
+        },
+        {
+          "alias": "Request",
+          "linewidth": 2
+        },
+        {
+          "alias": "Start",
+          "fill": 1,
+          "yaxis": 2,
+          "zindex": -3
+        },
+        {
+          "alias": "Usage",
+          "color": "#FF9830"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_upperbound{target_name=\"$vpa\", unit=\"core\"}",
+          "interval": "",
+          "legendFormat": "Upper",
+          "refId": "A"
+        },
+        {
+          "expr": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_target{target_name=\"$vpa\", unit=\"core\"}",
+          "interval": "",
+          "legendFormat": "Target",
+          "refId": "B"
+        },
+        {
+          "expr": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_lowerbound{target_name=\"$vpa\",unit=\"core\"}",
+          "interval": "",
+          "legendFormat": "Lower",
+          "refId": "C"
+        },
+        {
+          "expr": "sum(irate(container_cpu_usage_seconds_total{container_name=~\"$vpa\"}[1m] )) / on() sum by(container) (kube_pod_container_info{container=\"$vpa\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Usage",
+          "refId": "D"
+        },
+        {
+          "expr": "max(kube_pod_container_resource_requests_cpu_cores{container=\"$vpa\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Request",
+          "refId": "E"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Resources for $vpa",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Horizontal Scaling",
+      "type": "row"
+    },
+    {
+      "datasource": null,
+      "gridPos": {
+        "h": 9,
+        "w": 2,
+        "x": 0,
+        "y": 11
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "last"
+          ],
+          "defaults": {
+            "mappings": [
+              {
+                "from": "",
+                "id": 1,
+                "operator": "",
+                "text": "On",
+                "to": "",
+                "type": 1,
+                "value": "1"
+              },
+              {
+                "from": "",
+                "id": 2,
+                "operator": "",
+                "text": "Off",
+                "to": "",
+                "type": 1,
+                "value": "0"
+              },
+              {
+                "from": "",
+                "id": 3,
+                "operator": "",
+                "text": "-",
+                "to": "",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto"
+      },
+      "pluginVersion": "6.7.1",
+      "targets": [
+        {
+          "expr": "kube_hpa_status_condition{hpa=\"$hpa\", condition=\"ScalingActive\"}==1",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "HPA Status",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 2,
+        "y": 11
+      },
+      "hiddenSeries": false,
+      "id": 10,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "HPA Metrics",
+          "color": "rgb(255, 255, 255)",
+          "dashes": true
+        },
+        {
+          "alias": "Request",
+          "color": "#F2495C",
+          "dashes": true
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum by(pod_name) (irate(container_cpu_usage_seconds_total{container_name=~\"hserver\"}[1m]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Usage",
+          "refId": "D"
+        },
+        {
+          "expr": "max(kube_pod_container_resource_requests_cpu_cores{container_name=\"$hpa\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Request",
+          "refId": "E"
+        },
+        {
+          "expr": "kube_hpa_status_current_metrics_average_value{hpa=\"$hpa\"}",
+          "interval": "",
+          "legendFormat": "HPA Metrics",
+          "refId": "A"
+        },
+        {
+          "expr": "max(kube_pod_container_resource_requests_cpu_cores{container=\"$hpa\"})",
+          "interval": "",
+          "legendFormat": "Request",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Resources for $hpa",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 7,
+        "x": 9,
+        "y": 11
+      },
+      "hiddenSeries": false,
+      "id": 11,
       "legend": {
         "avg": false,
         "current": false,
@@ -56,35 +512,22 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
-          "$$hashKey": "object:55",
-          "alias": "Upper",
-          "fillBelowTo": "Lower",
+          "alias": "Max",
+          "fillBelowTo": "Min",
           "lines": false
         },
         {
-          "$$hashKey": "object:56",
-          "alias": "Lower",
+          "alias": "Min",
           "lines": false
         },
         {
-          "$$hashKey": "object:57",
-          "alias": "Target",
-          "color": "#C0D8FF",
-          "dashes": true,
-          "fill": 0,
-          "linewidth": 3
-        },
-        {
-          "$$hashKey": "object:58",
-          "alias": "Request",
+          "alias": "Current",
           "linewidth": 2
         },
         {
-          "$$hashKey": "object:59",
-          "alias": "Start",
-          "fill": 1,
-          "yaxis": 2,
-          "zindex": -3
+          "alias": "Desired",
+          "dashes": true,
+          "linewidth": 2
         }
       ],
       "spaceLength": 10,
@@ -92,41 +535,37 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_upperbound{container=\"$target\", unit=\"core\"}",
-          "interval": "",
-          "legendFormat": "Upper",
-          "refId": "A"
-        },
-        {
-          "expr": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_target{container=\"$target\", unit=\"core\"}",
-          "legendFormat": "Target",
-          "refId": "B"
-        },
-        {
-          "expr": "kube_verticalpodautoscaler_status_recommendation_containerrecommendations_lowerbound{container=\"$target\",unit=\"core\"}",
-          "legendFormat": "Lower",
-          "refId": "C"
-        },
-        {
-          "expr": "sum(irate(container_cpu_usage_seconds_total{container_name=~\"$target\"}[1m] )) / on() sum by(container) (kube_pod_container_info{container=\"$target\"})",
+          "expr": "kube_hpa_spec_max_replicas{hpa=\"$hpa\"}",
           "hide": false,
           "interval": "",
-          "legendFormat": "Usage",
+          "legendFormat": "Max",
           "refId": "D"
         },
         {
-          "expr": "max(kube_pod_container_resource_requests_cpu_cores{container=\"$target\"})",
+          "expr": "kube_hpa_spec_min_replicas{hpa=\"$hpa\"}",
           "hide": false,
           "interval": "",
-          "legendFormat": "Request",
+          "legendFormat": "Min",
           "refId": "E"
+        },
+        {
+          "expr": "kube_hpa_status_current_replicas{hpa=\"$hpa\"}",
+          "interval": "",
+          "legendFormat": "Current",
+          "refId": "A"
+        },
+        {
+          "expr": "kube_hpa_status_desired_replicas{hpa=\"$hpa\"}",
+          "interval": "",
+          "legendFormat": "Desired",
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "VPA for $target",
+      "title": "Replicas for $hpa",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -142,16 +581,14 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:110",
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": "1",
+          "max": null,
           "min": "0",
           "show": true
         },
         {
-          "$$hashKey": "object:111",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -175,8 +612,8 @@
       {
         "allValue": null,
         "current": {
-          "text": "hamster",
-          "value": "hamster"
+          "text": "vserver",
+          "value": "vserver"
         },
         "datasource": "Prometheus",
         "definition": "label_values(kube_verticalpodautoscaler_spec_updatepolicy_updatemode, target_name)",
@@ -185,17 +622,36 @@
         "index": -1,
         "label": null,
         "multi": false,
-        "name": "target",
-        "options": [
-          {
-            "$$hashKey": "object:143",
-            "selected": true,
-            "text": "hamster",
-            "value": "hamster"
-          }
-        ],
+        "name": "vpa",
+        "options": [],
         "query": "label_values(kube_verticalpodautoscaler_spec_updatepolicy_updatemode, target_name)",
-        "refresh": 0,
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "hserver",
+          "value": "hserver"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(kube_hpa_status_condition, hpa)",
+        "hide": 0,
+        "includeAll": false,
+        "index": -1,
+        "label": null,
+        "multi": false,
+        "name": "hpa",
+        "options": [],
+        "query": "label_values(kube_hpa_status_condition, hpa)",
+        "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -226,10 +682,10 @@
     ]
   },
   "timezone": "",
-  "title": "VPA Bounds",
-  "uid": "kUVXPErWk",
+  "title": "Scaling Overview",
+  "uid": "nLhVQijZz",
   "variables": {
     "list": []
   },
-  "version": 1
+  "version": 14
 }
