@@ -3,13 +3,13 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: hserver
 spec:
-  maxReplicas: 5
+  maxReplicas: 10
   minReplicas: 1
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: hserver
-  targetCPUUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 75
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -38,9 +38,20 @@ spec:
         name: hserver
         resources:
           requests:
-            cpu: 10m
+            cpu: 100m
             memory: 10Mi
       restartPolicy: Always
-      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hserver
+spec:
+  selector:
+    app: hserver
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080    
 
       

@@ -15,8 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
-  "iteration": 1585925817685,
+  "id": 1,
+  "iteration": 1586073105950,
   "links": [],
   "panels": [
     {
@@ -124,7 +124,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 7,
+        "w": 12,
         "x": 2,
         "y": 1
       },
@@ -140,7 +140,7 @@
         "values": false
       },
       "lines": true,
-      "linewidth": 2,
+      "linewidth": 1,
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
@@ -166,21 +166,19 @@
           "color": "#C0D8FF",
           "dashes": true,
           "fill": 0,
-          "linewidth": 3
+          "linewidth": 2
         },
         {
           "alias": "Request",
+          "color": "rgb(255, 255, 255)",
           "linewidth": 2
         },
         {
           "alias": "Start",
           "fill": 1,
+          "linewidth": 2,
           "yaxis": 2,
           "zindex": -3
-        },
-        {
-          "alias": "Usage",
-          "color": "#FF9830"
         }
       ],
       "spaceLength": 10,
@@ -206,10 +204,10 @@
           "refId": "C"
         },
         {
-          "expr": "sum(irate(container_cpu_usage_seconds_total{container_name=~\"$vpa\"}[1m] )) / on() sum by(container) (kube_pod_container_info{container=\"$vpa\"})",
+          "expr": "sum by(pod_name) (irate(container_cpu_usage_seconds_total{container_name=~\"$vpa\"}[1m]))",
           "hide": false,
           "interval": "",
-          "legendFormat": "Usage",
+          "legendFormat": "{{pod_name}}",
           "refId": "D"
         },
         {
@@ -243,7 +241,7 @@
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": null,
+          "max": "0.25",
           "min": "0",
           "show": true
         },
@@ -366,7 +364,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 7,
+        "w": 12,
         "x": 2,
         "y": 11
       },
@@ -382,7 +380,7 @@
         "values": false
       },
       "lines": true,
-      "linewidth": 2,
+      "linewidth": 1,
       "nullPointMode": "null",
       "options": {
         "dataLinks": []
@@ -395,12 +393,14 @@
         {
           "alias": "HPA Metrics",
           "color": "rgb(255, 255, 255)",
-          "dashes": true
+          "dashes": true,
+          "linewidth": 2
         },
         {
           "alias": "Request",
           "color": "#F2495C",
-          "dashes": true
+          "dashes": true,
+          "linewidth": 2
         }
       ],
       "spaceLength": 10,
@@ -408,10 +408,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by(pod_name) (irate(container_cpu_usage_seconds_total{container_name=~\"hserver\"}[1m]))",
+          "expr": "sum by(pod_name) (irate(container_cpu_usage_seconds_total{container_name=~\"$hpa\"}[1m]))",
           "hide": false,
           "interval": "",
-          "legendFormat": "Usage",
+          "legendFormat": "{{pod_name}}",
           "refId": "D"
         },
         {
@@ -485,8 +485,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
-        "w": 7,
-        "x": 9,
+        "w": 9,
+        "x": 14,
         "y": 11
       },
       "hiddenSeries": false,
@@ -664,7 +664,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -687,5 +687,5 @@
   "variables": {
     "list": []
   },
-  "version": 14
+  "version": 1
 }

@@ -42,6 +42,17 @@ spec:
             cpu: 10m
             memory: 10Mi
       restartPolicy: Always
-      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vserver
+spec:
+  selector:
+    app: vserver
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
 
       
